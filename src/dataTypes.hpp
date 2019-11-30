@@ -89,7 +89,7 @@ public:
     }
     BigInt operator - () const {
         BigInt ret = *this;
-        ret.isNeg ^= 1;
+        if(ret.length()) ret.isNeg ^= 1;
         return ret;
     }
     friend BigInt operator + (const BigInt &a, const BigInt &b) {

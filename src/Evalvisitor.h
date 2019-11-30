@@ -128,7 +128,7 @@ class EvalVisitor: public Python3BaseVisitor {
         auto ls_test = ctx->test();
         auto ls_suite = ctx->suite();
         for(unsigned i = 0; i < ls_test.size(); i++) {
-            if(visitTest(ls_test[i]).as<DataType>().data_Bool) {
+            if(visitTest(ls_test[i]).as<DataType>().toBool().data_Bool) {
                 vs.push(1);
                 auto ret =  visitSuite(ls_suite[i]);
                 vs.pop();

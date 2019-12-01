@@ -15,6 +15,7 @@ VariableStack vs;
 FlowStack flowStk, functionStk;
 
 map<string, Python3Parser::FuncdefContext*> functions;
+map<string, vector<pair<string, DataType> > > defaultArgs;
 
 class EvalVisitor: public Python3BaseVisitor {
     virtual antlrcpp::Any visitFile_input(Python3Parser::File_inputContext *ctx) override {
@@ -23,6 +24,18 @@ class EvalVisitor: public Python3BaseVisitor {
 
     virtual antlrcpp::Any visitFuncdef(Python3Parser::FuncdefContext *ctx) override {
         functions[ctx->NAME()->getText()] = ctx;
+        if(ctx->parameters()->typedargslist()) {
+            vector<pair<string, DataType> > args;
+            const auto def_Argument_List =  ctx->parameters()->typedargslist();
+            const auto tests = def_Argument_List->test();
+            for (int i = 0, siz = tests.size(), siz2 = def_Argument_List->tfpdef().size(); i < siz; i++) {
+                args.push_back(make_pair(def_Argument_List->tfpdef(siz2 - i - 1)->NAME()->getText(), visitTest(tests[tests.size() - i - 1]).as<DataType>()));
+            }
+            // for(auto i: args) debug << i.first << " = " << i.second.toPrint() << endl;
+
+            defaultArgs[ctx->NAME()->getText()] = args;
+            // debug << "inited" << endl;
+        }
         return DataType(None);
     }
 
@@ -302,6 +315,8 @@ class EvalVisitor: public Python3BaseVisitor {
             map<string, Variable> new_Argument_List;
             if(functions[function_Name]->parameters()->typedargslist()) { // push arguments.
                 const auto def_Argument_List =  functions[function_Name]->parameters()->typedargslist();
+                const auto arg2 = defaultArgs[function_Name];
+                for(auto i: arg2) new_Argument_List[i.first] = i.second;
                 if(ctx->trailer()->arglist()) {
                     const auto provided_Argument_List = ctx->trailer()->arglist()->argument();
                     int i;
@@ -316,13 +331,9 @@ class EvalVisitor: public Python3BaseVisitor {
                         new_Argument_List[t->NAME()->getText()] = visitTest(t->test()).as<DataType>();
                     }
                 }
-                const auto tests = def_Argument_List->test();
-                for (int i = 0, siz = def_Argument_List->tfpdef().size(); i < siz; i++) {
-                    const string name = def_Argument_List->tfpdef(siz - i - 1)->NAME()->getText();
-                    if (new_Argument_List.find(name) == new_Argument_List.end())
-                        new_Argument_List[name] = visitTest(tests[tests.size() - i - 1]).as<DataType>();
-                }
             }
+            // debug << "new Arguments are" << endl;
+            // for(auto t: new_Argument_List) debug << t.first << " = " << t.second.getContent().toPrint() << endl;
             vs.push(0), vs.merge(new_Argument_List), functionStk.push(Running);
             auto ret = visitSuite(functions[function_Name]->suite());
             vs.pop(), functionStk.pop();

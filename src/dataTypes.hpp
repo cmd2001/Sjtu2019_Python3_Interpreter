@@ -327,7 +327,7 @@ public:
         return DataType(a.data_Int % b.data_Int);
     }
     friend bool operator == (DataType a, DataType b) {
-        if (max(a.getType(), b.getType()) >= 4 && a.getType() != b.getType()) return 0;
+        if (max(a.getType(), b.getType()) >= 3 && a.getType() != b.getType()) return 0;
         fixType(a, b);
         if (a.getType() == Bool) return a.data_Bool == b.data_Bool;
         if (a.getType() == Int) return a.data_Int == b.data_Int;

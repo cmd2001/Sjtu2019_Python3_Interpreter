@@ -12,6 +12,7 @@
 #include <cctype>
 #include <vector>
 #include <set>
+#include <cmath>
 #ifndef debug
 #define debug cerr
 #endif

@@ -17,13 +17,14 @@ int main(int argc, const char* argv[]){
     EvalVisitor visitor;
     try {
         visitor.visit(tree);
-    } catch(...) {
-	cout << "fucked" << endl;
+    } /*catch(...) {
         return 0;
-    }/*catch(int) {
+    } */catch(int) {
         cout << "impossible statement" << endl;
         return 0;
-    } catch(double) {
+    } catch(...) {
+        return -1;
+    }/*catch(double) {
         cerr << "assertion failed" << endl;
         return 0;
     } catch(char) {

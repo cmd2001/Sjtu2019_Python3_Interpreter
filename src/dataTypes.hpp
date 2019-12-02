@@ -25,7 +25,6 @@ private:
         return dat.size();
     }
     inline int& operator [] (const int &x) {
-        assert(x < dat.size());
         return dat[x];
     }
     inline const int operator [] (const int &x) const {
@@ -224,7 +223,6 @@ private:
     }
     friend inline void fixType(DataType &a, DataType &b) { // convert calculable type.
         if(a.getType() == b.getType()) return;
-        // assert(a.getType() <= 3 && b.getType() <= 3); // ###
         while(a.getType() != b.getType()) a.getType() < b.getType() ? a.getNext() : b.getNext();
         if(a.getType() == Bool) a = a.toInt(), b = b.toInt();
     }
@@ -242,17 +240,14 @@ public:
     explicit DataType(const string &x) {tpe = String, data_String = x;}
     inline DataType toInt() const {
         if(tpe == Int) return *this;
-        // assert(tpe == Bool || tpe == Float); // ###
         DataType ret(Int);
         if(tpe == Bool) ret.data_Int.fromBool(data_Bool);
         else if(tpe == Float) ret.data_Int.fromDouble(data_Float);
         else if(tpe == String) ret.data_Int.fromString(data_String);
-        else assert(0); // if(tpe == None) ret.data_Int = 0;
         return ret;
     }
     inline DataType toFloat() const {
         if(tpe == Float) return *this;
-        // assert(tpe == Bool || tpe == Int); // ###
         DataType ret(Float);
         if(tpe == Bool) ret.data_Float = data_Bool;
         else ret.data_Float = data_Int.toDouble();
@@ -318,13 +313,11 @@ public:
     friend DataType dualDiv(DataType a, DataType b) {
         if(a.getType() == Bool) a = a.toInt();
         if(b.getType() == Bool) b = b.toInt();
-        // assert(a.getType() != Float && b.getType() != Float); // ###
         return DataType(a.data_Int / b.data_Int);
     }
     friend DataType operator % (DataType a, DataType b) {
         if(a.getType() == Bool) a = a.toInt();
         if(b.getType() == Bool) b = b.toInt();
-        if(max(a.getType(), b.getType()) >= Float) debug << "Wrong type in %" << endl, exit(0);
         return DataType(a.data_Int % b.data_Int);
     }
     friend bool operator == (DataType a, DataType b) {
@@ -355,8 +348,6 @@ public:
         return a == b || a > b;
     }
     DataType operator - () const {
-        assert(getType() != String);
-        assert(getType() != None);
         if(getType() == Float) return DataType(-data_Float);
         return DataType(-toInt().data_Int);
     }
@@ -434,7 +425,6 @@ public:
     }
     inline void pop() {
         --top;
-        assert(top >= 0);
     }
     inline void push(bool type) { // type = 0 then build from 0, else build from top
         if(type) ++top, stk[top] = stk[top - 1];

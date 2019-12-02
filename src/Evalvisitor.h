@@ -31,10 +31,8 @@ class EvalVisitor: public Python3BaseVisitor {
             for (int i = 0, siz = tests.size(), siz2 = def_Argument_List->tfpdef().size(); i < siz; i++) {
                 args.push_back(make_pair(def_Argument_List->tfpdef(siz2 - i - 1)->NAME()->getText(), visitTest(tests[tests.size() - i - 1]).as<DataType>()));
             }
-            // for(auto i: args) debug << i.first << " = " << i.second.toPrint() << endl;
 
             defaultArgs[ctx->NAME()->getText()] = args;
-            // debug << "inited" << endl;
         }
         return DataType(None);
     }
@@ -74,14 +72,12 @@ class EvalVisitor: public Python3BaseVisitor {
                 nums.push_back(ret.as<DataType>());
                 for(unsigned i = 1; i < testLists.size(); i++) {
                     const auto tests = testLists[i]->test();
-                    assert(tests.size() == nums.size());
                     for(unsigned j = 0; j < tests.size(); j++) vs[tests[j]->getText()] = nums[j];
                 }
             } else {
                 const auto nums = ret.as<vector<DataType> >();
                 for(unsigned i = 1; i < testLists.size(); i++) {
                     const auto tests = testLists[i]->test();
-                    assert(tests.size() == nums.size());
                     for(unsigned j = 0; j < tests.size(); j++) vs[tests[j]->getText()] = nums[j];
                 }
             }

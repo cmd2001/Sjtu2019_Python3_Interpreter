@@ -1,4 +1,4 @@
 git add *
-git commit -m "debugging"
+git commit -m "Final Release"
 git push origin master
 

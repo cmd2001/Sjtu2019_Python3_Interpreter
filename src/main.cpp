@@ -18,6 +18,7 @@ int main(int argc, const char* argv[]){
     try {
         visitor.visit(tree);
     } catch(...) {
+	cout << "fucked" << endl;
         return 0;
     }/*catch(int) {
         cout << "impossible statement" << endl;

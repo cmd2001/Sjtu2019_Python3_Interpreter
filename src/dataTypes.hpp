@@ -25,7 +25,7 @@ private:
         return dat.size();
     }
     inline int& operator [] (const int &x) {
-        if(x >= dat.size()) throw 0.1;
+        if(x >= dat.size()) return 0;
         return dat[x];
     }
     inline const int operator [] (const int &x) const {
@@ -224,7 +224,7 @@ private:
     }
     friend inline void fixType(DataType &a, DataType &b) { // convert calculable type.
         if(a.getType() == b.getType()) return;
-        if(!(a.getType() <= 3 && b.getType() <= 3)) throw 0.1;
+        if(!(a.getType() <= 3 && b.getType() <= 3)) assert(0);
         while(a.getType() != b.getType()) a.getType() < b.getType() ? a.getNext() : b.getNext();
         if(a.getType() == Bool) a = a.toInt(), b = b.toInt();
     }

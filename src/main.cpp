@@ -17,22 +17,10 @@ int main(int argc, const char* argv[]){
     EvalVisitor visitor;
     try {
         visitor.visit(tree);
-    } /*catch(...) {
-        return 0;
-    } */catch(int) {
-        cout << "failed in .h" << endl;
+    } catch(double) {
         return 0;
     } catch(...) {
         return -1;
-    }/* catch(int) {
-        cout << "impossible statement" << endl;
-        return 0;
-    } catch(double) {
-        cerr << "assertion failed" << endl;
-        return 0;
-    } catch(char) {
-        cerr << "top < 0" << endl;
-        return 0;
-    }*/
+    }
     return 0;
 }

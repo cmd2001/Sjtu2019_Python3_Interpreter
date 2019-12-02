@@ -224,7 +224,7 @@ private:
     }
     friend inline void fixType(DataType &a, DataType &b) { // convert calculable type.
         if(a.getType() == b.getType()) return;
-        // assert(a.getType() <= 3 && b.getType() <= 3);
+        // assert(a.getType() <= 3 && b.getType() <= 3); // ###
         while(a.getType() != b.getType()) a.getType() < b.getType() ? a.getNext() : b.getNext();
         if(a.getType() == Bool) a = a.toInt(), b = b.toInt();
     }
@@ -242,7 +242,7 @@ public:
     explicit DataType(const string &x) {tpe = String, data_String = x;}
     inline DataType toInt() const {
         if(tpe == Int) return *this;
-        // assert(tpe == Bool || tpe == Float);
+        assert(tpe == Bool || tpe == Float); // ###
         DataType ret(Int);
         if(tpe == Bool) ret.data_Int.fromBool(data_Bool);
         else ret.data_Int.fromDouble(data_Float);
@@ -250,7 +250,7 @@ public:
     }
     inline DataType toFloat() const {
         if(tpe == Float) return *this;
-        // assert(tpe == Bool || tpe == Int);
+        assert(tpe == Bool || tpe == Int); // ###
         DataType ret(Float);
         if(tpe == Bool) ret.data_Float = data_Bool;
         else ret.data_Float = data_Int.toDouble();
@@ -316,7 +316,7 @@ public:
     friend DataType dualDiv(DataType a, DataType b) {
         if(a.getType() == Bool) a = a.toInt();
         if(b.getType() == Bool) b = b.toInt();
-        // assert(a.getType() != Float && b.getType() != Float);
+        // assert(a.getType() != Float && b.getType() != Float); // ###
         return DataType(a.data_Int / b.data_Int);
     }
     friend DataType operator % (DataType a, DataType b) {

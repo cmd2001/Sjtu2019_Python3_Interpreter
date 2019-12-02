@@ -25,7 +25,7 @@ private:
         return dat.size();
     }
     inline int& operator [] (const int &x) {
-        if(x >= dat.size()) return 0;
+        if(x >= dat.size()) throw 0.1;
         return dat[x];
     }
     inline const int operator [] (const int &x) const {

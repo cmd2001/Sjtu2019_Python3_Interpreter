@@ -41,23 +41,24 @@ class EvalVisitor: public Python3BaseVisitor {
 
     virtual antlrcpp::Any visitParameters(Python3Parser::ParametersContext *ctx) override {
         debug << "in visitParameters" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitTypedargslist(Python3Parser::TypedargslistContext *ctx) override { // as this may cause infinity recursive call, this part will be solve in function calling.
         // as an instance, f(x): return x * x, g(x = g(1)): ...
         debug << "in visitTypedargslist" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitTfpdef(Python3Parser::TfpdefContext *ctx) override {
         debug << "in visitTfpdef" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitStmt(Python3Parser::StmtContext *ctx) override { // suite only includes stmt or simple_stmt.
         if(ctx->simple_stmt()) return visitSimple_stmt(ctx->simple_stmt());
         if(ctx->compound_stmt()) return visitCompound_stmt(ctx->compound_stmt());
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitSimple_stmt(Python3Parser::Simple_stmtContext *ctx) override {
@@ -67,6 +68,7 @@ class EvalVisitor: public Python3BaseVisitor {
     virtual antlrcpp::Any visitSmall_stmt(Python3Parser::Small_stmtContext *ctx) override {
         if(ctx->expr_stmt()) return visitExpr_stmt(ctx->expr_stmt());
         if(ctx->flow_stmt()) return visitFlow_stmt(ctx->flow_stmt());
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitExpr_stmt(Python3Parser::Expr_stmtContext *ctx) override {
@@ -106,13 +108,14 @@ class EvalVisitor: public Python3BaseVisitor {
 
     virtual antlrcpp::Any visitAugassign(Python3Parser::AugassignContext *ctx) override {
         debug << "in visitAugassign" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitFlow_stmt(Python3Parser::Flow_stmtContext *ctx) override {
         if(ctx->break_stmt()) return visitBreak_stmt(ctx->break_stmt());
         if(ctx->continue_stmt()) return visitContinue_stmt(ctx->continue_stmt());
         if(ctx->return_stmt()) return visitReturn_stmt(ctx->return_stmt());
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitBreak_stmt(Python3Parser::Break_stmtContext *ctx) override {
@@ -135,6 +138,7 @@ class EvalVisitor: public Python3BaseVisitor {
         if(ctx->if_stmt()) return visitIf_stmt(ctx->if_stmt());
         if(ctx->while_stmt()) return visitWhile_stmt(ctx->while_stmt());
         if(ctx->funcdef()) return visitFuncdef(ctx->funcdef());
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitIf_stmt(Python3Parser::If_stmtContext *ctx) override {
@@ -234,7 +238,7 @@ class EvalVisitor: public Python3BaseVisitor {
 
     virtual antlrcpp::Any visitComp_op(Python3Parser::Comp_opContext *ctx) override {
         debug << "in visitComp_op" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitArith_expr(Python3Parser::Arith_exprContext *ctx) override {
@@ -246,7 +250,7 @@ class EvalVisitor: public Python3BaseVisitor {
             const auto text = list_ops[i]->getText();
             if(text == "+") ret += visitTerm(list_nums[i + 1]).as<DataType>();
             else if(text =="-") ret -= visitTerm(list_nums[i + 1]).as<DataType>();
-            else assert(0);
+            else cout << "Fuck you!" << endl;
         }
         return ret;
     }
@@ -262,7 +266,7 @@ class EvalVisitor: public Python3BaseVisitor {
             else if(text == "/") ret = ret / visitFactor(list_nums[i + 1]).as<DataType>();
             else if(text == "//") ret = dualDiv(ret, visitFactor(list_nums[i + 1]).as<DataType>());
             else if(text == "%") ret = ret % visitFactor(list_nums[i + 1]).as<DataType>();
-            else assert(0);
+            else cout << "Fuck you!" << endl;
         }
         return ret;
     }
@@ -275,11 +279,11 @@ class EvalVisitor: public Python3BaseVisitor {
     }
     virtual antlrcpp::Any visitAddsub_op(Python3Parser::Addsub_opContext *ctx) override {
         debug << "in visitAddsub_op" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     virtual antlrcpp::Any visitMuls_op(Python3Parser::Muls_opContext *ctx) override {
         debug << "in visitMuls_op" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     virtual antlrcpp::Any visitAtom_expr(Python3Parser::Atom_exprContext *ctx) override {
         if(!ctx->trailer()) return visitAtom(ctx->atom());
@@ -322,18 +326,17 @@ class EvalVisitor: public Python3BaseVisitor {
                     }
                 }
             }
-            // debug << "new Arguments are" << endl;
-            // for(auto t: new_Argument_List) debug << t.first << " = " << t.second.getContent().toPrint() << endl;
             vs.push(0), vs.merge(new_Argument_List), functionStk.push(Running);
             auto ret = visitSuite(functions[function_Name]->suite());
             vs.pop(), functionStk.pop();
             return ret;
         }
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitTrailer(Python3Parser::TrailerContext *ctx) override {
         debug << "in visitTrailer" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitAtom(Python3Parser::AtomContext *ctx) override {
@@ -362,7 +365,7 @@ class EvalVisitor: public Python3BaseVisitor {
         if(text == "True") return DataType((bool) 1);
         if(text == "False") return DataType((bool) 0);
         if(text == "None") return DataType(None);
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     virtual antlrcpp::Any visitTestlist(Python3Parser::TestlistContext *ctx) override { // return an vector of DataType
         const auto tests = ctx->test();
@@ -374,12 +377,12 @@ class EvalVisitor: public Python3BaseVisitor {
 
     virtual antlrcpp::Any visitArglist(Python3Parser::ArglistContext *ctx) override {
         debug << "in visitArglist" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
 
     virtual antlrcpp::Any visitArgument(Python3Parser::ArgumentContext *ctx) override {
         debug << "in visitArgument" << endl;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
 };
 

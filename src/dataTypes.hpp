@@ -134,8 +134,6 @@ public:
         return ret;
     }
     friend BigInt operator / (BigInt a, BigInt b) {
-        //整除(无论正负)可以看成浮点除之后向下取整(当然这不是正确做法，因为这会造成有效数字丢失)
-        // What a fuck!
         BigInt ret;
         ret.dat.resize(max(a.length(), b.length()) + 5);
         bool flag = a.isNeg ^ b.isNeg;
@@ -222,7 +220,7 @@ private:
     inline void getNext() {
         if(getType() == Bool) *this = toInt();
         else if(getType() == Int) *this = toFloat();
-        else assert(0); // only String is bigger than Float, but this is solved in fixType;
+        else cout << "Fuck you!" << endl; // only String is bigger than Float, but this is solved in fixType;
     }
     friend inline void fixType(DataType &a, DataType &b) { // convert calculable type.
         if(a.getType() == b.getType()) return;
@@ -282,23 +280,31 @@ public:
             sprintf(buf, "%0.6f", data_Float);
             return (string) buf;
         }
+        cout << "Fuck you!" << endl;
     }
     friend DataType operator + (DataType a, DataType b) {
         fixType(a, b);
         if(a.getType() == Int) return DataType(a.data_Int + b.data_Int);
         if(a.getType() == Float) return DataType(a.data_Float + b.data_Float);
         if(a.getType() == String) return DataType(a.data_String + b.data_String);
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     friend DataType operator - (DataType a, DataType b) {
         fixType(a, b);
         if(a.getType() == Int) return DataType(a.data_Int - b.data_Int);
         if(a.getType() == Float) return DataType(a.data_Float - b.data_Float);
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     friend DataType operator * (DataType a, DataType b) {
         if(a.getType() == String) {
-            if(b.getType() == String) debug << "invaild syntax" << endl, assert(0);
+            if(b.getType() == String) debug << "invaild syntax" << endl, cout << "Fuck you!" << endl;
+            string ret = "";
+            for(BigInt i = 1, t = b.toInt().data_Int; i <= t; i++) ret = ret + a.data_String;
+            return DataType(ret);
+        }
+        swap(a, b);
+        if(a.getType() == String) {
+            if(b.getType() == String) debug << "invaild syntax" << endl, cout << "Fuck you!" << endl;
             string ret = "";
             for(BigInt i = 1, t = b.toInt().data_Int; i <= t; i++) ret = ret + a.data_String;
             return DataType(ret);
@@ -306,13 +312,13 @@ public:
         fixType(a, b);
         if(a.getType() == Int) return DataType(a.data_Int * b.data_Int);
         if(a.getType() == Float) return DataType(a.data_Float * b.data_Float);
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     friend DataType operator / (DataType a, DataType b) {
         fixType(a, b);
         if(a.getType() == Int) a.getNext(), b.getNext();
         if(a.getType() == Float) return DataType(a.data_Float / b.data_Float);
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     friend DataType dualDiv(DataType a, DataType b) {
         if(a.getType() == Bool) a = a.toInt();
@@ -334,19 +340,17 @@ public:
         if (a.getType() == Float) return a.data_Float == b.data_Float;
         if (a.getType() == String) return a.data_String == b.data_String;
         if(a.getType() == None) return 1;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     friend bool operator != (const DataType &a, const DataType &b) {
         return !(a == b);
     }
     friend bool operator < (DataType a, DataType b) {
         fixType(a, b);
-        // debug << "Types are " << a.getType() << " " << b.getType() << endl;
-        // debug << "a = " << a.toPrint() << "b = " << b.toPrint() << endl;
         if(a.getType() == Int) return a.data_Int < b.data_Int;
         if(a.getType() == Float) return a.data_Float < b.data_Float;
         if(a.getType() == String) return a.data_String < b.data_String;
-        assert(0);
+        cout << "Fuck you!" << endl;
     }
     friend bool operator <= (const DataType &a, const DataType &b) {
         return a == b || a < b;
@@ -447,7 +451,6 @@ public:
         for(auto t: args) stk[top][t.first] = t.second;
     }
     Variable& operator [] (const string &nme) {
-        // if(nme == "i") debug << "current top = " << top << endl;
         return stk[top][nme];
     }
 };

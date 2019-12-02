@@ -25,7 +25,7 @@ private:
         return dat.size();
     }
     inline int& operator [] (const int &x) {
-        assert(x < dat.size());
+        if(x >= dat.size()) throw 0.1;
         return dat[x];
     }
     inline const int operator [] (const int &x) const {
@@ -220,11 +220,11 @@ private:
     inline void getNext() {
         if(getType() == Bool) *this = toInt();
         else if(getType() == Int) *this = toFloat();
-        else cout << "Fuck you!" << endl; // only String is bigger than Float, but this is solved in fixType;
+        else throw 0; // only String is bigger than Float, but this is solved in fixType;
     }
     friend inline void fixType(DataType &a, DataType &b) { // convert calculable type.
         if(a.getType() == b.getType()) return;
-        assert(a.getType() <= 3 && b.getType() <= 3);
+        if(!(a.getType() <= 3 && b.getType() <= 3)) throw 0.1;
         while(a.getType() != b.getType()) a.getType() < b.getType() ? a.getNext() : b.getNext();
         if(a.getType() == Bool) a = a.toInt(), b = b.toInt();
     }
@@ -242,7 +242,7 @@ public:
     explicit DataType(const string &x) {tpe = String, data_String = x;}
     inline DataType toInt() const {
         if(tpe == Int) return *this;
-        assert(tpe == Bool || tpe == Float);
+        if(!(tpe == Bool || tpe == Float)) throw 0.1;
         DataType ret(Int);
         if(tpe == Bool) ret.data_Int.fromBool(data_Bool);
         else ret.data_Int.fromDouble(data_Float);
@@ -250,7 +250,7 @@ public:
     }
     inline DataType toFloat() const {
         if(tpe == Float) return *this;
-        assert(tpe == Bool || tpe == Int);
+        if(!(tpe == Bool || tpe == Int)) throw 0.1;
         DataType ret(Float);
         if(tpe == Bool) ret.data_Float = data_Bool;
         else ret.data_Float = data_Int.toDouble();
@@ -280,57 +280,50 @@ public:
             sprintf(buf, "%0.6f", data_Float);
             return (string) buf;
         }
-        cout << "Fuck you!" << endl;
+        throw 0;
     }
     friend DataType operator + (DataType a, DataType b) {
         fixType(a, b);
         if(a.getType() == Int) return DataType(a.data_Int + b.data_Int);
         if(a.getType() == Float) return DataType(a.data_Float + b.data_Float);
         if(a.getType() == String) return DataType(a.data_String + b.data_String);
-        cout << "Fuck you!" << endl;
+        throw 0;
     }
     friend DataType operator - (DataType a, DataType b) {
         fixType(a, b);
         if(a.getType() == Int) return DataType(a.data_Int - b.data_Int);
         if(a.getType() == Float) return DataType(a.data_Float - b.data_Float);
-        cout << "Fuck you!" << endl;
+        throw 0;
     }
     friend DataType operator * (DataType a, DataType b) {
         if(a.getType() == String) {
-            if(b.getType() == String) debug << "invaild syntax" << endl, cout << "Fuck you!" << endl;
+            if(b.getType() == String) debug << "invaild syntax" << endl, throw 0;
             string ret = "";
             for(BigInt i = 1, t = b.toInt().data_Int; i <= t; i++) ret = ret + a.data_String;
             return DataType(ret);
         }
         swap(a, b);
         if(a.getType() == String) {
-            if(b.getType() == String) debug << "invaild syntax" << endl, cout << "Fuck you!" << endl;
+            if(b.getType() == String) debug << "invaild syntax" << endl, throw 0;
             string ret = "";
             for(BigInt i = 1, t = b.toInt().data_Int; i <= t; i++) ret = ret + a.data_String;
             return DataType(ret);
         }
-	swap(a, b);
-	if(a.getType() == String) {
-		if(b.getType() == String) debug << "invaild syntax" << endl, assert(0);
-		string ret = "";
-		for(BigInt i = 1, t = b.toInt().data_Int; i <= t; i++) ret = ret + a.data_String;
-		return DataType(ret);
-	}
         fixType(a, b);
         if(a.getType() == Int) return DataType(a.data_Int * b.data_Int);
         if(a.getType() == Float) return DataType(a.data_Float * b.data_Float);
-        cout << "Fuck you!" << endl;
+        throw 0;
     }
     friend DataType operator / (DataType a, DataType b) {
         fixType(a, b);
         if(a.getType() == Int) a.getNext(), b.getNext();
         if(a.getType() == Float) return DataType(a.data_Float / b.data_Float);
-        cout << "Fuck you!" << endl;
+        throw 0;
     }
     friend DataType dualDiv(DataType a, DataType b) {
         if(a.getType() == Bool) a = a.toInt();
         if(b.getType() == Bool) b = b.toInt();
-        assert(a.getType() != Float && b.getType() != Float);
+        if(!(a.getType() != Float && b.getType() != Float)) throw 0.1;
         return DataType(a.data_Int / b.data_Int);
     }
     friend DataType operator % (DataType a, DataType b) {
@@ -347,7 +340,7 @@ public:
         if (a.getType() == Float) return a.data_Float == b.data_Float;
         if (a.getType() == String) return a.data_String == b.data_String;
         if(a.getType() == None) return 1;
-        cout << "Fuck you!" << endl;
+        throw 0;
     }
     friend bool operator != (const DataType &a, const DataType &b) {
         return !(a == b);
@@ -357,7 +350,7 @@ public:
         if(a.getType() == Int) return a.data_Int < b.data_Int;
         if(a.getType() == Float) return a.data_Float < b.data_Float;
         if(a.getType() == String) return a.data_String < b.data_String;
-        cout << "Fuck you!" << endl;
+        throw 0;
     }
     friend bool operator <= (const DataType &a, const DataType &b) {
         return a == b || a < b;
@@ -369,8 +362,7 @@ public:
         return a == b || a > b;
     }
     DataType operator - () const {
-        assert(getType() != String);
-        assert(getType() != None);
+        if(getType() == String || getType() == None) throw 0.1;
         if(getType() == Float) return DataType(-data_Float);
         return DataType(-toInt().data_Int);
     }
@@ -448,7 +440,7 @@ public:
     }
     inline void pop() {
         --top;
-        assert(top >= 0);
+        if(top < 0) throw 'a';
     }
     inline void push(bool type) { // type = 0 then build from 0, else build from top
         if(type) ++top, stk[top] = stk[top - 1];

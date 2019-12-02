@@ -242,10 +242,12 @@ public:
     explicit DataType(const string &x) {tpe = String, data_String = x;}
     inline DataType toInt() const {
         if(tpe == Int) return *this;
-        assert(tpe == Bool || tpe == Float); // ###
+        // assert(tpe == Bool || tpe == Float); // ###
         DataType ret(Int);
         if(tpe == Bool) ret.data_Int.fromBool(data_Bool);
-        else ret.data_Int.fromDouble(data_Float);
+        else if(tpe == Float) ret.data_Int.fromDouble(data_Float);
+        else if(tpe == String) ret.data_Int.fromString(data_String);
+        else assert(0); // if(tpe == None) ret.data_Int = 0;
         return ret;
     }
     inline DataType toFloat() const {

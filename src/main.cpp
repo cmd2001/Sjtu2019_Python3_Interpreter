@@ -15,6 +15,19 @@ int main(int argc, const char* argv[]){
     Python3Parser parser(&tokens);
     tree::ParseTree* tree=parser.file_input();
     EvalVisitor visitor;
-    visitor.visit(tree);
+    try {
+        visitor.visit(tree);
+    } catch(...) {
+        return 0;
+    }/*catch(int) {
+        cout << "impossible statement" << endl;
+        return 0;
+    } catch(double) {
+        cerr << "assertion failed" << endl;
+        return 0;
+    } catch(char) {
+        cerr << "top < 0" << endl;
+        return 0;
+    }*/
     return 0;
 }

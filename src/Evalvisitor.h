@@ -39,26 +39,10 @@ class EvalVisitor: public Python3BaseVisitor {
         return DataType(None);
     }
 
-    virtual antlrcpp::Any visitParameters(Python3Parser::ParametersContext *ctx) override {
-        debug << "in visitParameters" << endl;
-        throw 0;
-    }
-
-    virtual antlrcpp::Any visitTypedargslist(Python3Parser::TypedargslistContext *ctx) override { // as this may cause infinity recursive call, this part will be solve in function calling.
-        // as an instance, f(x): return x * x, g(x = g(1)): ...
-        debug << "in visitTypedargslist" << endl;
-        throw 0;
-    }
-
-    virtual antlrcpp::Any visitTfpdef(Python3Parser::TfpdefContext *ctx) override {
-        debug << "in visitTfpdef" << endl;
-        throw 0;
-    }
 
     virtual antlrcpp::Any visitStmt(Python3Parser::StmtContext *ctx) override { // suite only includes stmt or simple_stmt.
         if(ctx->simple_stmt()) return visitSimple_stmt(ctx->simple_stmt());
         if(ctx->compound_stmt()) return visitCompound_stmt(ctx->compound_stmt());
-        throw 0;
     }
 
     virtual antlrcpp::Any visitSimple_stmt(Python3Parser::Simple_stmtContext *ctx) override {
@@ -68,7 +52,6 @@ class EvalVisitor: public Python3BaseVisitor {
     virtual antlrcpp::Any visitSmall_stmt(Python3Parser::Small_stmtContext *ctx) override {
         if(ctx->expr_stmt()) return visitExpr_stmt(ctx->expr_stmt());
         if(ctx->flow_stmt()) return visitFlow_stmt(ctx->flow_stmt());
-        throw 0;
     }
 
     virtual antlrcpp::Any visitExpr_stmt(Python3Parser::Expr_stmtContext *ctx) override {
@@ -91,14 +74,14 @@ class EvalVisitor: public Python3BaseVisitor {
                 nums.push_back(ret.as<DataType>());
                 for(unsigned i = 1; i < testLists.size(); i++) {
                     const auto tests = testLists[i]->test();
-                    if(tests.size() != nums.size()) throw 0;
+                    assert(tests.size() == nums.size());
                     for(unsigned j = 0; j < tests.size(); j++) vs[tests[j]->getText()] = nums[j];
                 }
             } else {
                 const auto nums = ret.as<vector<DataType> >();
                 for(unsigned i = 1; i < testLists.size(); i++) {
                     const auto tests = testLists[i]->test();
-                    if(tests.size() != nums.size()) throw 0;
+                    assert(tests.size() == nums.size());
                     for(unsigned j = 0; j < tests.size(); j++) vs[tests[j]->getText()] = nums[j];
                 }
             }
@@ -106,16 +89,11 @@ class EvalVisitor: public Python3BaseVisitor {
         return DataType(None);
     }
 
-    virtual antlrcpp::Any visitAugassign(Python3Parser::AugassignContext *ctx) override {
-        debug << "in visitAugassign" << endl;
-        throw 0;
-    }
 
     virtual antlrcpp::Any visitFlow_stmt(Python3Parser::Flow_stmtContext *ctx) override {
         if(ctx->break_stmt()) return visitBreak_stmt(ctx->break_stmt());
         if(ctx->continue_stmt()) return visitContinue_stmt(ctx->continue_stmt());
         if(ctx->return_stmt()) return visitReturn_stmt(ctx->return_stmt());
-        throw 0;
     }
 
     virtual antlrcpp::Any visitBreak_stmt(Python3Parser::Break_stmtContext *ctx) override {
@@ -138,7 +116,6 @@ class EvalVisitor: public Python3BaseVisitor {
         if(ctx->if_stmt()) return visitIf_stmt(ctx->if_stmt());
         if(ctx->while_stmt()) return visitWhile_stmt(ctx->while_stmt());
         if(ctx->funcdef()) return visitFuncdef(ctx->funcdef());
-        throw 0;
     }
 
     virtual antlrcpp::Any visitIf_stmt(Python3Parser::If_stmtContext *ctx) override {
@@ -236,10 +213,6 @@ class EvalVisitor: public Python3BaseVisitor {
         return DataType((bool) 1);
     }
 
-    virtual antlrcpp::Any visitComp_op(Python3Parser::Comp_opContext *ctx) override {
-        debug << "in visitComp_op" << endl;
-        throw 0;
-    }
 
     virtual antlrcpp::Any visitArith_expr(Python3Parser::Arith_exprContext *ctx) override {
         const auto list_ops = ctx->addsub_op();
@@ -250,7 +223,6 @@ class EvalVisitor: public Python3BaseVisitor {
             const auto text = list_ops[i]->getText();
             if(text == "+") ret += visitTerm(list_nums[i + 1]).as<DataType>();
             else if(text =="-") ret -= visitTerm(list_nums[i + 1]).as<DataType>();
-            else throw 0;
         }
         return ret;
     }
@@ -266,7 +238,6 @@ class EvalVisitor: public Python3BaseVisitor {
             else if(text == "/") ret = ret / visitFactor(list_nums[i + 1]).as<DataType>();
             else if(text == "//") ret = dualDiv(ret, visitFactor(list_nums[i + 1]).as<DataType>());
             else if(text == "%") ret = ret % visitFactor(list_nums[i + 1]).as<DataType>();
-            else throw 0;
         }
         return ret;
     }
@@ -277,14 +248,7 @@ class EvalVisitor: public Python3BaseVisitor {
         if(op->getText() == "+") return visitFactor(ctx->factor());
         return -(visitFactor(ctx->factor()).as<DataType>());
     }
-    virtual antlrcpp::Any visitAddsub_op(Python3Parser::Addsub_opContext *ctx) override {
-        debug << "in visitAddsub_op" << endl;
-        throw 0;
-    }
-    virtual antlrcpp::Any visitMuls_op(Python3Parser::Muls_opContext *ctx) override {
-        debug << "in visitMuls_op" << endl;
-        throw 0;
-    }
+
     virtual antlrcpp::Any visitAtom_expr(Python3Parser::Atom_exprContext *ctx) override {
         if(!ctx->trailer()) return visitAtom(ctx->atom());
         const string function_Name = ctx->atom()->getText();
@@ -331,13 +295,8 @@ class EvalVisitor: public Python3BaseVisitor {
             vs.pop(), functionStk.pop();
             return ret;
         }
-        throw 0;
     }
 
-    virtual antlrcpp::Any visitTrailer(Python3Parser::TrailerContext *ctx) override {
-        debug << "in visitTrailer" << endl;
-        throw 0;
-    }
 
     virtual antlrcpp::Any visitAtom(Python3Parser::AtomContext *ctx) override {
         const string text = ctx->getText();
@@ -365,7 +324,6 @@ class EvalVisitor: public Python3BaseVisitor {
         if(text == "True") return DataType((bool) 1);
         if(text == "False") return DataType((bool) 0);
         if(text == "None") return DataType(None);
-        throw 0;
     }
     virtual antlrcpp::Any visitTestlist(Python3Parser::TestlistContext *ctx) override { // return an vector of DataType
         const auto tests = ctx->test();
@@ -375,15 +333,6 @@ class EvalVisitor: public Python3BaseVisitor {
         return ret;
     }
 
-    virtual antlrcpp::Any visitArglist(Python3Parser::ArglistContext *ctx) override {
-        debug << "in visitArglist" << endl;
-        throw 0;
-    }
-
-    virtual antlrcpp::Any visitArgument(Python3Parser::ArgumentContext *ctx) override {
-        debug << "in visitArgument" << endl;
-        throw 0;
-    }
 };
 
 

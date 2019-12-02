@@ -91,14 +91,14 @@ class EvalVisitor: public Python3BaseVisitor {
                 nums.push_back(ret.as<DataType>());
                 for(unsigned i = 1; i < testLists.size(); i++) {
                     const auto tests = testLists[i]->test();
-                    if(tests.size() != nums.size()) throw 0.1;
+                    if(tests.size() != nums.size()) throw 0;
                     for(unsigned j = 0; j < tests.size(); j++) vs[tests[j]->getText()] = nums[j];
                 }
             } else {
                 const auto nums = ret.as<vector<DataType> >();
                 for(unsigned i = 1; i < testLists.size(); i++) {
                     const auto tests = testLists[i]->test();
-                    if(tests.size() != nums.size()) throw 0.1;
+                    if(tests.size() != nums.size()) throw 0;
                     for(unsigned j = 0; j < tests.size(); j++) vs[tests[j]->getText()] = nums[j];
                 }
             }

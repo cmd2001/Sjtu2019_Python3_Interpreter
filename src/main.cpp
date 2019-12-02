@@ -19,8 +19,8 @@ int main(int argc, const char* argv[]){
         visitor.visit(tree);
     } /*catch(...) {
         return 0;
-    } */catch(char) {
-        cerr << "top < 0" << endl;
+    } */catch(int) {
+        cout << "failed in .h" << endl;
         return 0;
     } catch(...) {
         return -1;

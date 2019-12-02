@@ -18,6 +18,10 @@
 #endif
 using namespace std;
 
+inline int dcmp(const double &a, const double &b) {
+    return fabs(a - b) <= 1e-10 ? 0 : a < b ? -1 : 1;
+}
+
 class BigInt {
 private:
     vector<int> dat;
@@ -326,7 +330,7 @@ public:
         fixType(a, b);
         if (a.getType() == Bool) return a.data_Bool == b.data_Bool;
         if (a.getType() == Int) return a.data_Int == b.data_Int;
-        if (a.getType() == Float) return fabs(a.data_Float - b.data_Float) <= 1e-10;
+        if (a.getType() == Float) return !dcmp(a.data_Float, b.data_Float);
         if (a.getType() == String) return a.data_String == b.data_String;
         if(a.getType() == None) return 1;
     }
@@ -336,7 +340,7 @@ public:
     friend bool operator < (DataType a, DataType b) {
         fixType(a, b);
         if(a.getType() == Int) return a.data_Int < b.data_Int;
-        if(a.getType() == Float) return a.data_Float < b.data_Float;
+        if(a.getType() == Float) return dcmp(a.data_Float, b.data_Float) < 0;
         if(a.getType() == String) return a.data_String < b.data_String;
     }
     friend bool operator <= (const DataType &a, const DataType &b) {

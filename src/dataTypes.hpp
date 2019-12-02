@@ -250,7 +250,7 @@ public:
     }
     inline DataType toFloat() const {
         if(tpe == Float) return *this;
-        assert(tpe == Bool || tpe == Int); // ###
+        // assert(tpe == Bool || tpe == Int); // ###
         DataType ret(Float);
         if(tpe == Bool) ret.data_Float = data_Bool;
         else ret.data_Float = data_Int.toDouble();

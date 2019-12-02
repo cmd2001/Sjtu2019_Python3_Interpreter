@@ -303,6 +303,13 @@ public:
             for(BigInt i = 1, t = b.toInt().data_Int; i <= t; i++) ret = ret + a.data_String;
             return DataType(ret);
         }
+	swap(a, b);
+	if(a.getType() == String) {
+		if(b.getType() == String) debug << "invaild syntax" << endl, assert(0);
+		string ret = "";
+		for(BigInt i = 1, t = b.toInt().data_Int; i <= t; i++) ret = ret + a.data_String;
+		return DataType(ret);
+	}
         fixType(a, b);
         if(a.getType() == Int) return DataType(a.data_Int * b.data_Int);
         if(a.getType() == Float) return DataType(a.data_Float * b.data_Float);

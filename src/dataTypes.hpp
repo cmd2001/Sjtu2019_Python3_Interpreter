@@ -343,6 +343,7 @@ public:
         if(a.getType() == Int) return a.data_Int < b.data_Int;
         if(a.getType() == Float) return a.data_Float < b.data_Float; // dcmp(a.data_Float, b.data_Float) < 0;
         if(a.getType() == String) return a.data_String < b.data_String;
+        return 0;
     }
     friend bool operator <= (const DataType &a, const DataType &b) {
         return a == b || a < b;

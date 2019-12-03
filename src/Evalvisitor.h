@@ -303,11 +303,11 @@ class EvalVisitor: public Python3BaseVisitor {
         if(ctx->NUMBER()) {
             if(text.find('.') != text.npos) {
                 double a = 0;
-                int i = 0;
+                int i = text[0] == '-';
                 for(; text[i] != '.'; i++) a = a * 10 + text[i] - '0';
                 double mul = 0.1;
                 for(int j = i + 1; j < text.length(); j++) a = a + mul * (text[j] - '0'), mul *= 0.1;
-                return DataType(a);
+                return DataType(text[0] == '-' ? -a : a);
             } else return DataType(BigInt(text));
         }
         auto Strings = ctx->STRING();

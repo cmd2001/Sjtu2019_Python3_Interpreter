@@ -260,6 +260,7 @@ public:
     }
     inline DataType toString() const {
         if(tpe == String) return *this;
+        if(tpe == None) return DataType("None");
         DataType ret(String);
         ret.data_String = toInt().data_Int.toString();
         return ret;

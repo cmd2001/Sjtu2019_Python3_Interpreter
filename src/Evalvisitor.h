@@ -187,8 +187,11 @@ class EvalVisitor: public Python3BaseVisitor {
     virtual antlrcpp::Any visitComparison(Python3Parser::ComparisonContext *ctx) override {
         const auto ops = ctx->comp_op();
         if(!ops.size()) return visitArith_expr(ctx->arith_expr(0));
+        const auto ariths = ctx->arith_expr();
+        vector<DataType> arith_Data;
+        for(auto i: ariths) arith_Data.push_back(visitArith_expr(i).as<DataType>());
         for(unsigned i = 0; i < ops.size(); i++) {
-            const auto hl = visitArith_expr(ctx->arith_expr(i)).as<DataType>(), hr = visitArith_expr(ctx->arith_expr(i + 1)).as<DataType>();
+            const auto hl = arith_Data[i], hr = arith_Data[i + 1];
             const auto text = ops[i]->getText();
             bool flag = 1;
             if(text == "==") {

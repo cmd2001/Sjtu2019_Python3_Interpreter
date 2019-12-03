@@ -189,7 +189,11 @@ class EvalVisitor: public Python3BaseVisitor {
         if(!ops.size()) return visitArith_expr(ctx->arith_expr(0));
         const auto ariths = ctx->arith_expr();
         vector<DataType> arith_Data;
-        for(auto i: ariths) arith_Data.push_back(visitArith_expr(i).as<DataType>());
+        map<string, DataType> mem;
+        for(auto i: ariths) {
+            if(mem.find(i->getText()) != mem.end()) arith_Data.push_back(mem[i->getText()]);
+            else arith_Data.push_back(mem[i->getText()] = visitArith_expr(i).as<DataType>());
+        }
         for(unsigned i = 0; i < ops.size(); i++) {
             const auto hl = arith_Data[i], hr = arith_Data[i + 1];
             const auto text = ops[i]->getText();
